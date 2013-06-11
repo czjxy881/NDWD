@@ -1,62 +1,67 @@
-# coding:utf-8
+#encoding=gbk
 import urllib2,urllib,requests,re,sys
-#å›¾ç‰‡ï¼Œåç§°ï¼Œä»·æ ¼çš„æ€»è¡¨
+import db
+#Í¼Æ¬£¬Ãû³Æ£¬¼Û¸ñµÄ×Ü±í
 pic=[];name=[];price=[];deal=[]
 def find(t):
     '''
-        æŸ¥è¯¢å½“å‰æºä»£ç (t)ä¸­çš„å•†å“ï¼Œå¹¶åŠ å…¥æ€»è¡¨,è¿”å›å€¼ä¸ºæˆåŠŸæŸ¥æ‰¾åˆ°çš„æ•°é‡
-        å‚æ•°è¯´æ˜ï¼š
-            t: æ‰€æŸ¥è¯¢æºä»£ç   
+        ²éÑ¯µ±Ç°Ô´´úÂë(t)ÖĞµÄÉÌÆ·£¬²¢¼ÓÈë×Ü±í,·µ»ØÖµÎª³É¹¦²éÕÒµ½µÄÊıÁ¿
+        ²ÎÊıËµÃ÷£º
+            t: Ëù²éÑ¯Ô´´úÂë  
     '''
     global pic,name,price,deal
-    #è·å–æ·˜å®å›¾ç‰‡åœ°å€
+    #»ñÈ¡ÌÔ±¦Í¼Æ¬µØÖ·
     r_pic=re.compile('<p class=\"pic-box\">.*\s*<span><img src=\"(.*?)\" />')
-    #è·å–å•†å“åç§°åŠåœ°å€
+    #»ñÈ¡ÉÌÆ·Ãû³Æ¼°µØÖ·
     r_name=re.compile('<h3 class="summary"><a .*? href=\"(.*?)\" target=\"_blank\" title=\"(.*?)\">')
-    #è·å–å•†å“ä»·æ ¼åŠè¿è´¹
+    #»ñÈ¡ÉÌÆ·¼Û¸ñ¼°ÔË·Ñ
     r_price=re.compile('<div class=\"col price\">(.*?)<em></em></div>\s*<div class=\"col end shipping\">\s*(.*?)\s*</div>')   
-    #è·å–æˆäº¤é‡
+    #»ñÈ¡³É½»Á¿
     r_deal=re.compile('<div class="col dealing">.*?(\d+)')
     
-    #å°†æ­¤é¡µä¿¡æ¯åŠ åˆ°æ€»è¡¨ä¸­
+    #½«´ËÒ³ĞÅÏ¢¼Óµ½×Ü±íÖĞ
     pic+=r_pic.findall(t)
     name+=r_name.findall(t)
     deal+=r_deal.findall(t)
     
-    #å°†æ·˜å®çš„ä»·æ ¼åŠè¿è´¹å˜æˆæ•°å­—å½¢å¼
+    #½«ÌÔ±¦µÄ¼Û¸ñ¼°ÔË·Ñ±ä³ÉÊı×ÖĞÎÊ½
     pt=r_price.findall(t)
     p=[1,2]
     for i in range(len(pt)):
         p[0]=pt[i][0][3:]
-        if pt[i][1]=='å…è¿è´¹':p[1]='0.00'
+        if pt[i][1].decode('u8')=='ÃâÔË·Ñ'.decode('gbk'):p[1]='0.00'
         else: p[1]=pt[i][1][9:]
-        pt[i]=list(p) #ç›´æ¥ç­‰äºä¸ºå¼•ç”¨ï¼Œæ­¤å¤„åº”è¯¥å¤åˆ¶
+        pt[i]=list(p) #Ö±½ÓµÈÓÚÎªÒıÓÃ£¬´Ë´¦Ó¦¸Ã¸´ÖÆ
     price+=pt
     return len(pic)
 def taobao(s,id):
     '''
-      æŸ¥è¯¢æ·˜å®ä¸­æ­¤å•†å“ä¿¡æ¯ï¼Œsä¸ºå…³é”®è¯,idä¸ºç”Ÿæˆidï¼Œå°†æŸ¥åˆ°çš„å•†å“ä¿å­˜åˆ°id.txtå¹¶è¿”å›æˆåŠŸæ•°ç›®
-      å‚æ•°è¯´æ˜ï¼š
-         sï¼š å…³é”®è¯
+      ²éÑ¯ÌÔ±¦ÖĞ´ËÉÌÆ·ĞÅÏ¢£¬sÎª¹Ø¼ü´Ê,idÎªÉú³Éid£¬½«²éµ½µÄÉÌÆ·±£´æµ½Êı¾İ¿âid±íÖĞ²¢·µ»Ø³É¹¦ÊıÄ¿
+      ²ÎÊıËµÃ÷£º
+         s£º ¹Ø¼ü´Ê
     '''
     global pic,name,price,deal
-    pic=[];name=[];price=[];deal=[] #æ¸…é›¶
-    #å°†å…³é”®è¯è½¬æˆç½‘é¡µç¼–ç 
+    pic=[];name=[];price=[];deal=[] #ÇåÁã
+    #½«¹Ø¼ü´Ê×ª³ÉÍøÒ³±àÂë
     s=urllib.quote(s)
     s.replace('%20','+')
     url='http://s.taobao.com/search?q=%s&s='%s
-    start=0 #èµ·å§‹ä½ç½®
-    text="" #æŸ¥è¯¢å†…å®¹
+    start=0 #ÆğÊ¼Î»ÖÃ
+    text="" #²éÑ¯ÄÚÈİ
+    db.create(id)
     while start==0 or find(text)!=0:
-        text=requests.get(url+str(start)).text.encode('u8')#requstsç»æµ‹è¯•æ¯”urllibå¿«
+        text=requests.get(url+str(start)).text.encode('u8')#requsts¾­²âÊÔ±Èurllib¿ì
         start+=44
-        if start>220:break #åªæŠ“å–å‰5é¡µ
-    fname=str(id)+'tb.txt'
-    with open(fname,'w') as f:
-        for i in range(len(name)): #æŒ‰æ ¼å¼å†™å…¥æ–‡ä»¶
-            f.write(name[i][1]+'\n'+pic[i]+'\n'+name[i][0]+'\n'+price[i][0]+'\n'+price[i][1]+'\n'+deal[i]+'\n')
+        if start>220:break #Ö»×¥È¡Ç°5Ò³
+    s=[1,2,3,4,5,6,7]
+    for i in range(len(name)): #°´¸ñÊ½Ğ´ÈëÎÄ¼ş
+        s[0]=name[i][1].decode('u8').encode('gbk');s[1]=pic[i];s[2]=name[i][0];s[3]=price[i][0]
+        s[4]=price[i][1];s[5]=deal[i];s[6]='ÌÔ±¦'
+        #print s
+        db.add(id,s)
     return len(name)    
 if __name__=="__main__":
+   # taobao('nx300','t5')
     if len(sys.argv)==3:
         taobao(sys.argv[1],sys.argv[2])
         exit(0)
