@@ -24,3 +24,4 @@
 * pic,4.ico为图片资源
 * 1.php为主页，2.php为搜索页
 * db.py为和数据库交互的脚本，get_taobao.py获取淘宝信息并保存在数据库中，get_zcn.py获取亚马逊信息并保存
+* conn为php链接数据库所需文件
