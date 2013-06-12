@@ -14,7 +14,7 @@ def find(t):
     #获取商品名称及地址
     r_name=re.compile('<div class=\"productTitle\"><a href=\"(.*?)\">(.*?)</a> </div>')
     #获取商品价格及运费
-    r_price=re.compile(u'<span>\uffe5\s*(\d+)<')
+    r_price=re.compile(u'<span>\uffe5\s*(.*?)<')
     pic+=r_pic.findall(t)
     name+=r_name.findall(t)
     price+=r_price.findall(t)
@@ -37,15 +37,19 @@ def zcn(s,id):
     db.create(id)
     text=requests.get(url).text#requsts经测试比urllib快
     find(text)
+    #f=open('2.txt','w')
+    #f.write(text.encode('utf8'))
+    #f.close()
     s=[1,2,3,4,5,6,7]
     for i in range(len(name)): #按格式写入文件
         s[0]=name[i][1].encode('gbk');s[1]=pic[i].encode('gbk');s[2]=name[i][0].encode('gbk');
-        s[3]=price[i][0].encode('gbk')
+        s[3]=(price[i].encode('gbk')).replace(',','')
         s[4]=-1;s[5]=-1;s[6]='亚马逊'
         #print s
         db.add(id,s)
     return len(name)    
 if __name__=='__main__':
+      #zcn('nx300','ttt')
       if len(sys.argv)==3:
         zcn(sys.argv[1],sys.argv[2])
         exit(0)

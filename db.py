@@ -1,9 +1,12 @@
 #encoding=gbk
 import MySQLdb
 def create(id):
+    '''
+       构建一张表，表名为id
+    '''
     conn=MySQLdb.connect(host='localhost',user='root',passwd='asdf1234',db='test1',charset='gbk')
     cur=conn.cursor()
-    try:
+    try: #中文输入，选用gbk
         cur.execute('create table `%s`(`name` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,`pic` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,`url` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,`price` INT NOT NULL,`transport` INT NOT NULL,`sell` INT NOT NULL,`from` VARCHAR(256) NOT NULL)default charset=gbk '%id);
     except:
         pass
@@ -11,6 +14,9 @@ def create(id):
     cur.close()
     conn.close()
 def add(id,s):
+    '''
+        将s记录加入id表中
+    '''
     conn=MySQLdb.connect(host='localhost',user='root',passwd='asdf1234',db='test1',charset='gbk')
     cur=conn.cursor()
     cur.execute("insert into %s values('%s','%s','%s',%s,%s,%s,'%s')"%(id,s[0],s[1],s[2],s[3],s[4],s[5],s[6]))
