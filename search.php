@@ -1,18 +1,18 @@
 <!DOCUMENT HTML>
-<link rel="shortcut icon" href="4.ico" >
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
 <?php
-	if(!isset($_GET['s'])||$_GET['s']=="")
+	if(!isset($_GET['s'])||$_GET['s']=="")//没有搜索内容 转回主页
 	{
-		echo '<meta http-equiv="refresh" content="0; url=1.php" />';
+		echo '<meta http-equiv="refresh" content="0; url=index.php" />';
 	}
 	else
 	{
 		$s=$_GET['s'];
-		if(isset($_GET['id']))$it=$_GET['id'];
-		else $it='t'.rand(0,200000);
+		//echo $s;
+		if(isset($_GET['id']))$it=$_GET['id'];//获取id
+		else $it='t'.rand(0,200000);//生成随机id
 		if(isset($_GET['order']))$order=$_GET['order'];
-		else $order='price';
+		else $order='price';//默认按价格排序
 	}
 ?>
 <style type="text/css">
@@ -40,7 +40,7 @@ vertical-align:top;
 </style>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="shortcut icon" href="./source/4.ico" >
 <title>你低我低-<?php echo $s;?></title>
 </head>
 <body>
@@ -48,9 +48,9 @@ vertical-align:top;
 <hr>
 <div>
 	<tr></tr><tr></tr><tr></tr>
-  <form name="form1" method="get" action="2.php">
+  <form name="form1" method="get" action="search.php">
     <p>
-      <img src="pic.jpg" width="125" height="50">
+      <img src="./source/pic.jpg" width="125" height="50">
       <input type="text" name="s" id="kw" value=<?php echo $s?> maxlength="100" style="width:474px;">
       <input type="submit" name="sub" value="搜索" id="su" class="btn">
     </p>
@@ -63,8 +63,8 @@ vertical-align:top;
 </div>
 
 <?php
-include_once ("conn/conn.php");
-if ($_GET [page] == "") {
+include_once ("conn/conn.php");//链接数据库
+if ($_GET [page] == "") {//获取页码
 	$_GET [page] = 1;
 }
 ;
@@ -171,7 +171,7 @@ a:active {
 							</tr>
 							<tr>
 								<td><a href="<?php echo $myrow_2 [url]; ?>"><?php 
-								$t=str_ireplace($s,"<font color='#FF0000'><strong>$s</strong></font>",$myrow_2 [name]);
+								$t=str_ireplace($s,"<font color='#FF0000'><strong>$s</strong></font>",$myrow_2 [name]);//对搜索关键字标红
 								echo $t; ?></a></td>
 							</tr>
 							<tr>
@@ -215,7 +215,7 @@ a:active {
 																	}
 																	?>
                 <?php
-																	echo "<a href='2.php?s=$s&id=".$it."&page=$pnext'> $pnext </a>";
+																	echo "<a href='search.php?s=$s&id=".$it."&order=".$order."&page=$pnext'> $pnext </a>";
 																	$mm = $mm + 1;
 																}
 																?>
