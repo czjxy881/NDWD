@@ -34,7 +34,7 @@
 * conn为php链接数据库所需文件
 * index.php为主页，search.php为搜索页
 * db.py为和数据库交互的脚本，get_taobao.py获取淘宝信息，get_zcn.py获取亚马逊信息
-* 更多文档说明，请参加文档说明 文件夹
+* 更多文档说明，请参见 文档说明 文件夹
 
 ---
 #关于作者 (Author)
