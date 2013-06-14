@@ -62,7 +62,7 @@ def taobao(s,id):
     return len(name)    
 if __name__=="__main__":
    # taobao('nx300','t5')
-    if len(sys.argv)==3:
+    if len(sys.argv)==3:#命令行参数处理
         taobao(sys.argv[1],sys.argv[2])
         exit(0)
     else: exit(-1)

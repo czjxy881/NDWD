@@ -37,9 +37,6 @@ def zcn(s,id):
     db.create(id)
     text=requests.get(url).text#requsts经测试比urllib快
     find(text)
-    #f=open('2.txt','w')
-    #f.write(text.encode('utf8'))
-    #f.close()
     s=[1,2,3,4,5,6,7]
     for i in range(len(name)): #按格式写入文件
         s[0]=name[i][1].encode('gbk');s[1]=pic[i].encode('gbk');s[2]=name[i][0].encode('gbk');
@@ -50,7 +47,7 @@ def zcn(s,id):
     return len(name)    
 if __name__=='__main__':
       #zcn('nx300','ttt')
-      if len(sys.argv)==3:
+      if len(sys.argv)==3:#命令行参数处理
         zcn(sys.argv[1],sys.argv[2])
         exit(0)
       else: exit(-1)
